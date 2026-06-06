@@ -1,0 +1,134 @@
+id,label,category,category_name,role,parent,month,modifiable,description
+open_app,Open the Trainerize app,app,App Navigation & Onboarding,foundation,,Intro,N,Launch the app.
+find_workout,Find today's workout / task,app,App Navigation & Onboarding,foundation,open_app,Intro,N,Locate the day's task.
+find_calendar,Find the calendar,app,App Navigation & Onboarding,concept,open_app,Intro,N,Navigate the schedule.
+check_messages,Check messages,app,App Navigation & Onboarding,concept,open_app,Intro,N,Read coach messages.
+message_coach,Message your coach,app,App Navigation & Onboarding,concept,check_messages,Intro,N,Send a message.
+complete_workout,Mark a workout complete,app,App Navigation & Onboarding,concept,find_workout,Intro,N,Mark task done.
+log_reps,Log reps / amounts,app,App Navigation & Onboarding,concept,complete_workout,Intro,N,Enter reps performed.
+timed_task,Use the in-app timer,app,App Navigation & Onboarding,concept,find_workout,Intro,N,"e.g., a timed walk."
+snapshot_task,Upload a snapshot to earn points,app,App Navigation & Onboarding,concept,complete_workout,Intro,N,Photo proof of a task.
+bonus_tasks,Complete bonus-point tasks,app,App Navigation & Onboarding,concept,find_workout,Intro,N,Weekly bonus tasks.
+independent_app_use,Independently use the app,app,App Navigation & Onboarding,goal,,Intro,N,Navigate core features alone.
+gather_materials,Gather materials (First Five),found,Movement Foundations & Safety,foundation,,X,N,"Water bottle, equipment."
+clear_space,"Ensure clear, safe space",found,Movement Foundations & Safety,foundation,,X,N,Enough safe room to move.
+estimate_time,Estimate time needed,found,Movement Foundations & Safety,concept,,X,N,Know session length.
+safety_check,Pre-workout safety check,found,Movement Foundations & Safety,concept,,X,N,"Shoes, space, ready."
+body_part_vocab,Body-part vocabulary,found,Movement Foundations & Safety,foundation,,X,N,"Chest, back, legs, hips, core..."
+count_reps,Count reps,found,Movement Foundations & Safety,foundation,,X,N,Count repetitions.
+sets_reps,Understand sets x reps,found,Movement Foundations & Safety,concept,count_reps,X,N,"e.g., 3 sets of 10."
+progressive_overload,Progressive overload,found,Movement Foundations & Safety,concept,,M2,Y,Add challenge as it gets easy.
+safe_stretch_rules,Stretch safely,found,Movement Foundations & Safety,concept,,M3,N,"No bounce, slow, breathe, gentle."
+listen_to_body,Listen to your body,aware,Body Awareness & Self-Modification,concept,,M1,N,Use bodily feedback.
+intensity_judgment,Too hard / too easy / just right,aware,Body Awareness & Self-Modification,concept,listen_to_body,M1,N,Rate if a movement fits.
+difficulty_tiers,Use levels 1 / 2 / 3,aware,Body Awareness & Self-Modification,concept,intensity_judgment,M2,Y,Easy/medium/hard tiers.
+choose_band,Choose a resistance band,aware,Body Awareness & Self-Modification,concept,intensity_judgment,M1,Y,Pick band tension.
+choose_weight,Choose a household weight,aware,Body Awareness & Self-Modification,concept,intensity_judgment,M2,Y,Pick how heavy.
+exercise_modification,Use a modification,aware,Body Awareness & Self-Modification,concept,intensity_judgment,X,Y,Step a movement up/down.
+where_felt,Identify where you feel it,aware,Body Awareness & Self-Modification,concept,body_part_vocab,M1,N,Locate the muscle worked.
+target_muscle,Match exercise to target muscle,aware,Body Awareness & Self-Modification,concept,body_part_vocab,M1,N,Connect movement to muscle.
+self_select_intensity,Self-select the right intensity,aware,Body Awareness & Self-Modification,goal,,M2,Y,Independently set challenge.
+what_resistance,What is resistance training,resist,Resistance Training,concept,,M1,N,Strength training basics.
+benefits_resistance,Benefits of resistance training,resist,Resistance Training,concept,what_resistance,M1,N,"Strength, balance, falls, confidence."
+why_bands,Why resistance bands,resist,Resistance Training,concept,what_resistance,M1,N,Safe home strength training.
+band_tension,Read band tension / weight,resist,Resistance Training,concept,why_bands,M1,N,Color = tension level.
+add_band_weights,Combine band weights,resist,Resistance Training,concept,band_tension,M1,N,Add two bands together.
+bodyweight_exercise,Bodyweight exercise,resist,Resistance Training,concept,what_resistance,M2,Y,Your body is the weight.
+household_weights,Household items as weights,resist,Resistance Training,concept,what_resistance,M2,Y,"Backpack, bottles, cans."
+build_home_gym,Build a home gym,resist,Resistance Training,concept,household_weights,M2,N,Improvise equipment.
+core_training,Core training (3 B's),resist,Resistance Training,concept,what_resistance,M2,N,"Belly, butt, back."
+squat,Squat,resist,Resistance Training,skill,why_bands,M1,Y,Lower-body push.
+row,Row,resist,Resistance Training,skill,why_bands,M1,Y,Back / pull.
+chest_press,Chest Press,resist,Resistance Training,skill,why_bands,M1,Y,Chest push.
+shoulder_press,Shoulder Press,resist,Resistance Training,skill,why_bands,M1,Y,Overhead press.
+lateral_raise,Lateral Raise,resist,Resistance Training,skill,why_bands,M3,Y,Shoulder raise.
+bicep_curl,Bicep Curl,resist,Resistance Training,skill,why_bands,M1,Y,Arm curl.
+calf_raise,Calf Raise,resist,Resistance Training,skill,why_bands,M1,Y,Calf lift.
+pallof_press,Pallof Press,resist,Resistance Training,skill,core_training,M1,Y,Anti-rotation core.
+pushup,Push-Up (or Wall Push-Up),resist,Resistance Training,skill,bodyweight_exercise,M2,Y,Chest push; wall = easier.
+plank,Plank,resist,Resistance Training,skill,bodyweight_exercise,M2,Y,Core hold.
+wall_sit,Wall Sit,resist,Resistance Training,skill,bodyweight_exercise,M2,Y,Leg hold.
+glute_bridge,Glute Bridge,resist,Resistance Training,skill,bodyweight_exercise,M2,Y,Hip/glute lift.
+lunge,Lunge,resist,Resistance Training,skill,bodyweight_exercise,M3,Y,Leg step.
+chair_dip,Bench / Chair Dip,resist,Resistance Training,skill,bodyweight_exercise,M2,Y,Triceps dip.
+backpack_squat,Backpack Squat,resist,Resistance Training,skill,household_weights,M2,Y,Weighted squat.
+bottle_press,Water Bottle Press,resist,Resistance Training,skill,household_weights,M2,Y,Weighted press.
+detergent_curl,Detergent Curl,resist,Resistance Training,skill,household_weights,M2,Y,Weighted curl.
+laundry_deadlift,Laundry Deadlift,resist,Resistance Training,skill,household_weights,M2,Y,Hinge lift.
+hip_hinge,Hip Hinge,resist,Resistance Training,skill,household_weights,M2,Y,Hinge pattern.
+good_morning,Good Morning,resist,Resistance Training,skill,household_weights,M2,Y,Hamstring hinge.
+russian_twist,Russian Twist,resist,Resistance Training,skill,core_training,M2,Y,Rotational core.
+superman,Superman,resist,Resistance Training,skill,core_training,M2,Y,Back extension.
+stomach_vacuum,Stomach Vacuum,resist,Resistance Training,skill,core_training,M2,Y,Deep core.
+pelvic_tilt,Pelvic Tilt,resist,Resistance Training,skill,core_training,M2,Y,Core control.
+mason_twist,Mason Twist,resist,Resistance Training,skill,core_training,M2,Y,Rotational core.
+bird_dog,Bird Dog,resist,Resistance Training,skill,core_training,M2,Y,Core stability.
+leg_raise,Leg Raise,resist,Resistance Training,skill,core_training,M2,Y,Lower abs.
+dead_bug,Dead Bug,resist,Resistance Training,skill,core_training,M2,Y,Core stability.
+full_resistance_workout,Build & complete a resistance workout,resist,Resistance Training,goal,,M2,Y,All 3 methods combined.
+what_stretching,What is stretching,flex,Flexibility & Mobility,concept,,M1,N,Lengthening muscles.
+static_vs_dynamic,Static vs dynamic stretching,flex,Flexibility & Mobility,concept,what_stretching,M1,N,Hold vs move.
+what_flexibility,What is flexibility,flex,Flexibility & Mobility,concept,what_stretching,M3,N,How far muscles stretch.
+what_mobility,What is mobility,flex,Flexibility & Mobility,concept,what_stretching,M3,N,How well joints move.
+flex_vs_mobility,Flexibility vs mobility,flex,Flexibility & Mobility,concept,what_mobility,M3,N,Still vs in-motion.
+why_warmup,Why warm up,flex,Flexibility & Mobility,concept,static_vs_dynamic,M1,N,"Readiness, injury prevention."
+why_cooldown,Why cool down,flex,Flexibility & Mobility,concept,static_vs_dynamic,M1,N,"Recovery, lower heart rate."
+session_timing,Session timing (5-10 min),flex,Flexibility & Mobility,concept,why_warmup,M1,N,Warm-up/cooldown length.
+yoga_flow,Yoga flow (floor->seated->standing),flex,Flexibility & Mobility,concept,what_mobility,M3,Y,Sequenced positions.
+categorize_movements,Sort warm-up / exercise / cooldown,flex,Flexibility & Mobility,concept,static_vs_dynamic,M1,N,Classify a movement.
+hamstring_sweep,Hamstring Sweep,flex,Flexibility & Mobility,skill,why_warmup,M1,Y,Dynamic warm-up (leg).
+wall_slide,Wall Slide,flex,Flexibility & Mobility,skill,why_warmup,M1,Y,Dynamic warm-up (shoulders).
+cat_cow,Cat-Cow,flex,Flexibility & Mobility,skill,why_warmup,M1,Y,Dynamic warm-up (back).
+clam_shell,Clam Shell,flex,Flexibility & Mobility,skill,why_warmup,M1,Y,Dynamic warm-up (hip).
+arm_circles,Arm Circles / Swings,flex,Flexibility & Mobility,skill,why_warmup,M1,Y,Dynamic warm-up (shoulders).
+quad_pull,Quad Pull,flex,Flexibility & Mobility,skill,why_warmup,M1,Y,Dynamic warm-up (leg).
+neck_circles,Neck Circles,flex,Flexibility & Mobility,skill,what_mobility,M3,Y,Mobility (neck).
+knee_hugs,Standing Knee Hugs,flex,Flexibility & Mobility,skill,what_mobility,M3,Y,Mobility (hip).
+heel_slides,Heel Slides,flex,Flexibility & Mobility,skill,what_mobility,M3,Y,Mobility (knee).
+toe_walk,Toe Walk,flex,Flexibility & Mobility,skill,what_mobility,M3,Y,Mobility (ankle).
+heel_walk,Heel Walk,flex,Flexibility & Mobility,skill,what_mobility,M3,Y,Mobility (ankle).
+forward_fold,Forward Fold,flex,Flexibility & Mobility,skill,why_cooldown,M1,Y,Static stretch (leg/back).
+standing_wall_stretch,Standing Wall Stretch,flex,Flexibility & Mobility,skill,why_cooldown,M1,Y,Static stretch (chest).
+rear_delt_stretch,Rear Delt Stretch,flex,Flexibility & Mobility,skill,why_cooldown,M1,Y,Static stretch (shoulders).
+childs_pose,Child's Pose,flex,Flexibility & Mobility,skill,why_cooldown,M1,Y,Static stretch (back).
+pretzel,Pretzel,flex,Flexibility & Mobility,skill,why_cooldown,M1,Y,Static stretch (hip).
+figure_4,Figure-4,flex,Flexibility & Mobility,skill,why_cooldown,M3,Y,Static stretch (hip).
+upper_back_hug,Upper Back Stretch (Hug),flex,Flexibility & Mobility,skill,why_cooldown,M3,Y,Static stretch (back).
+overhead_reach,Overhead Reach,flex,Flexibility & Mobility,skill,why_cooldown,M3,Y,Static stretch (side).
+side_body_stretch,Side Body Stretch,flex,Flexibility & Mobility,skill,why_cooldown,M3,Y,Static stretch (side).
+standing_calf_stretch,Standing / Wall Calf Stretch,flex,Flexibility & Mobility,skill,why_cooldown,M3,Y,Static stretch (calf).
+chest_opener,Chest Opener,flex,Flexibility & Mobility,skill,why_cooldown,M3,Y,Static stretch (chest).
+quad_stretch,Standing Quad Stretch,flex,Flexibility & Mobility,skill,why_cooldown,M3,Y,Static stretch (quad).
+build_routine,Build a warm-up + cooldown routine,flex,Flexibility & Mobility,goal,,M3,Y,Assemble a full routine.
+what_cardio,What is cardio,cardio,Cardiovascular & Endurance,concept,,M1,N,Raises heart rate & breathing.
+cardio_benefits,Cardio benefits,cardio,Cardiovascular & Endurance,concept,what_cardio,M1,N,"Endurance, heart, lungs."
+interval_training,Interval format (work / rest),cardio,Cardiovascular & Endurance,concept,what_cardio,M1,Y,60s work / 60s rest.
+jumping_jacks,Jumping Jacks,cardio,Cardiovascular & Endurance,skill,interval_training,M1,Y,Cardio move.
+speed_march,Speed March,cardio,Cardiovascular & Endurance,skill,interval_training,M1,Y,Cardio move.
+squat_punch,Squat & Punch,cardio,Cardiovascular & Endurance,skill,interval_training,M1,Y,Cardio move.
+star_jumps,Star Jumps,cardio,Cardiovascular & Endurance,skill,interval_training,M1,Y,Cardio move.
+knee_to_elbow,Knee to Elbow,cardio,Cardiovascular & Endurance,skill,interval_training,M1,Y,Cardio move.
+jump_rope,Jump Rope,cardio,Cardiovascular & Endurance,skill,interval_training,M1,Y,Cardio move.
+line_jumps,Line Jumps,cardio,Cardiovascular & Endurance,skill,interval_training,M1,Y,Cardio move.
+build_endurance,Build cardiovascular endurance,cardio,Cardiovascular & Endurance,goal,,M1,N,Sustain activity longer.
+what_coordination,What is coordination,balance,Coordination & Balance,concept,,M1,N,Move body parts together.
+what_balance,What is balance,balance,Coordination & Balance,concept,,M1,N,Maintain body position.
+coord_balance_together,How they work together,balance,Coordination & Balance,concept,what_coordination,M1,N,Control + stability.
+single_leg_stand,Stand on One Leg,balance,Coordination & Balance,skill,what_balance,M1,Y,Balance drill.
+side_plank,Side Plank,balance,Coordination & Balance,skill,what_balance,M1,Y,Balance/core hold.
+corner_hops,4-Corner Hops,balance,Coordination & Balance,skill,coord_balance_together,M1,Y,Coordination pattern.
+ball_toss,Ball Toss / Catch,balance,Coordination & Balance,skill,what_coordination,M1,Y,Hand-eye coordination.
+improve_balance,Improve coordination & balance,balance,Coordination & Balance,goal,,M1,N,"Fall prevention, stability."
+exercise_to_daily,Connect exercises to daily activities,transfer,Real-World Transfer,concept,,M1,N,Map moves to real life.
+functional_strength,Functional strength for daily tasks,transfer,Real-World Transfer,concept,exercise_to_daily,M2,N,Strength for living.
+squat_transfer,"Squat -> sit/stand, in/out of car",transfer,Real-World Transfer,skill,exercise_to_daily,M1,N,Transfer example.
+row_transfer,"Row -> pulling a door, lifting",transfer,Real-World Transfer,skill,exercise_to_daily,M1,N,Transfer example.
+press_transfer,Press -> lifting / reaching overhead,transfer,Real-World Transfer,skill,exercise_to_daily,M1,N,Transfer example.
+apply_daily_living,Apply fitness to independent daily living,transfer,Real-World Transfer,goal,,M2,N,Use it for real tasks.
+energy_checkin,Check in on energy / mood,wellbeing,Self-Regulation & Wellbeing,concept,,X,N,Rate how you feel.
+rest_vs_push,Decide when to rest vs push,wellbeing,Self-Regulation & Wellbeing,concept,energy_checkin,X,N,Effort by feel.
+low_energy_option,Choose a low-energy alternative,wellbeing,Self-Regulation & Wellbeing,concept,energy_checkin,X,Y,Gentler path when unwell.
+reflection,Reflect on a session,wellbeing,Self-Regulation & Wellbeing,concept,,X,N,Note how it felt.
+be_the_coach,Be the coach (teach someone),wellbeing,Self-Regulation & Wellbeing,concept,,M1,N,Teach an exercise to a peer.
+partner_workout,Work out with a partner,wellbeing,Self-Regulation & Wellbeing,concept,,M1,N,Social challenge.
+sustain_habit,Sustain a consistent exercise habit,wellbeing,Self-Regulation & Wellbeing,goal,,X,N,Keep going week to week.

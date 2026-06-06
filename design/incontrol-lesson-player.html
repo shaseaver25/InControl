@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>InControl — Lesson Player (End-User)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:        #F7F3EC;
+    --cream-dark:   #EDE8DF;
+    --white:        #FFFFFF;
+    --forest:       #2E6844;
+    --forest-light: #4A9265;
+    --forest-pale:  #D6EDE0;
+    --amber:        #E07C30;
+    --amber-light:  #F5A461;
+    --amber-pale:   #FDE8D4;
+    --mint:         #3DB89A;
+    --mint-pale:    #D4F0E8;
+    --sky:          #4A90C4;
+    --sky-pale:     #D4E8F5;
+    --ink:          #1A1714;
+    --ink-soft:     #4A4540;
+    --ink-muted:    #8A857F;
+    --ink-faint:    #C4BFB8;
+    --font-d: 'Fredoka', sans-serif;
+    --font-b: 'Nunito', sans-serif;
+    --r-sm: 8px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px; --r-full: 999px;
+    --shadow-sm:  0 2px 8px rgba(46,104,68,0.08);
+    --shadow-md:  0 4px 20px rgba(46,104,68,0.12);
+    --shadow-lg:  0 8px 40px rgba(46,104,68,0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: var(--font-b);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  /* ── PHONE SHELL ── */
+  .phone {
+    width: 390px;
+    min-height: 844px;
+    background: var(--cream);
+    border-radius: 44px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.20), 0 0 0 12px #1A1714, 0 0 0 14px #333;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* status bar */
+  .status-bar {
+    height: 44px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    flex-shrink: 0;
+  }
+  .status-time {
+    font-family: var(--font-d);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .status-icons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 14px;
+  }
+
+  /* ── TOP BAR ── */
+  .top-bar {
+    background: var(--white);
+    padding: 12px 20px 16px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .top-bar-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .coach-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--forest-pale);
+    border-radius: var(--r-full);
+    padding: 6px 14px 6px 6px;
+  }
+  .coach-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4A9265, #2E6844);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .coach-name {
+    font-family: var(--font-d);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--forest);
+  }
+  .audio-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--amber-pale);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: background 0.15s;
+  }
+  .audio-btn:hover { background: var(--amber-light); }
+
+  /* visual schedule */
+  .visual-schedule {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 2px 0;
+  }
+  .visual-schedule::-webkit-scrollbar { display: none; }
+  .vs-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+    width: 44px;
+    opacity: 0.38;
+    transition: opacity 0.3s;
+  }
+  .vs-step.done { opacity: 0.75; }
+  .vs-step.active { opacity: 1; }
+  .vs-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--cream-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .vs-step.done .vs-icon { background: var(--forest-pale); }
+  .vs-step.done .vs-icon::after {
+    content: '✓';
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 14px;
+    height: 14px;
+    background: var(--forest);
+    color: white;
+    border-radius: 50%;
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-d);
+    font-weight: 700;
+  }
+  .vs-step.active .vs-icon {
+    background: var(--amber);
+    box-shadow: 0 0 0 3px var(--amber-pale);
+  }
+  .vs-label {
+    font-family: var(--font-d);
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    text-align: center;
+    line-height: 1.1;
+  }
+  .vs-step.active .vs-label { color: var(--amber); }
+  .vs-step.done .vs-label { color: var(--forest); }
+  .vs-line {
+    width: 6px;
+    height: 2px;
+    background: var(--cream-dark);
+    flex-shrink: 0;
+    margin-bottom: 16px;
+  }
+  .vs-line.done { background: var(--forest-pale); }
+
+  /* ── SCREEN CONTENT ── */
+  .screens {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .screen {
+    position: absolute;
+    inset: 0;
+    padding: 24px 20px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+    animation: fadeIn 0.35s ease;
+  }
+  .screen::-webkit-scrollbar { display: none; }
+  .screen.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-bar {
+    background: var(--white);
+    padding: 16px 20px 32px;
+    border-top: 1px solid var(--cream-dark);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .btn-main {
+    width: 100%;
+    padding: 18px;
+    background: var(--forest);
+    color: var(--white);
+    border: none;
+    border-radius: var(--r-full);
+    font-family: var(--font-d);
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    box-shadow: 0 4px 16px rgba(46,104,68,0.30);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-main:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(46,104,68,0.38); }
+  .btn-main:active { transform: translateY(0); }
+  .btn-main.amber {
+    background: var(--amber);
+    box-shadow: 0 4px 16px rgba(224,124,48,0.30);
+  }
+  .btn-main.amber:hover { box-shadow: 0 8px 24px rgba(224,124,48,0.38); }
+  .btn-secondary {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    color: var(--ink-muted);
+    border: none;
+    border-radius: var(--r-full);
+    font-family: var(--font-d);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .btn-secondary:hover { color: var(--ink); }
+
+  /* ── SHARED COMPONENTS ── */
+  .step-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--forest-pale);
+    color: var(--forest);
+    padding: 5px 14px;
+    border-radius: var(--r-full);
+    font-family: var(--font-d);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    align-self: flex-start;
+  }
+  .step-label.amber { background: var(--amber-pale); color: var(--amber); }
+  .step-label.mint { background: var(--mint-pale); color: var(--mint); }
+
+  h2 {
+    font-family: var(--font-d);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .body-text {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+
+  /* ── SCREEN 1: OPENER ── */
+  .greeting-card {
+    background: var(--white);
+    border-radius: var(--r-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .greeting-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4A9265 0%, #2E6844 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(46,104,68,0.25);
+  }
+  .greeting-text .name {
+    font-family: var(--font-d);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--forest);
+  }
+  .greeting-text .message {
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin-top: 3px;
+    font-weight: 500;
+  }
+
+  .date-card {
+    background: var(--forest);
+    color: var(--white);
+    border-radius: var(--r-lg);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .date-card .date-label { font-family: var(--font-d); font-size: 13px; font-weight: 500; opacity: 0.7; }
+  .date-card .date-val { font-family: var(--font-d); font-size: 24px; font-weight: 700; margin-top: 2px; }
+  .date-card .streak { text-align: right; }
+  .date-card .streak-num { font-family: var(--font-d); font-size: 28px; font-weight: 700; color: var(--amber-light); }
+  .date-card .streak-label { font-size: 12px; opacity: 0.7; }
+
+  .mood-section {}
+  .mood-label {
+    font-family: var(--font-d);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .mood-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .mood-btn {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: 2.5px solid var(--cream-dark);
+    background: var(--white);
+    font-size: 26px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .mood-btn:hover, .mood-btn.selected {
+    border-color: var(--amber);
+    background: var(--amber-pale);
+    transform: scale(1.18);
+    box-shadow: 0 4px 16px rgba(224,124,48,0.25);
+  }
+
+  /* ── SCREEN 2: GOAL CONNECT ── */
+  .goal-card {
+    background: var(--forest);
+    border-radius: var(--r-xl);
+    padding: 24px;
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .goal-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .goal-card::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: -20px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .goal-card .label { font-family: var(--font-d); font-size: 13px; font-weight: 600; opacity: 0.65; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .goal-card .goal-text { font-family: var(--font-d); font-size: 22px; font-weight: 700; line-height: 1.3; }
+
+  .goal-photo {
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    height: 140px;
+    background: linear-gradient(135deg, var(--forest-pale) 0%, var(--mint-pale) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 72px;
+  }
+
+  .connection-text {
+    background: var(--white);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--amber);
+  }
+  .connection-text p { font-size: 17px; font-weight: 600; color: var(--ink); line-height: 1.6; }
+
+  /* ── SCREEN 3: TEACH ── */
+  .video-placeholder {
+    border-radius: var(--r-lg);
+    background: var(--ink);
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .video-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(46,104,68,0.3) 0%, rgba(30,20,10,0.8) 100%);
+  }
+  .play-btn {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    transition: transform 0.18s;
+  }
+  .play-btn:hover { transform: scale(1.08); }
+  .video-caption {
+    color: rgba(255,255,255,0.8);
+    font-family: var(--font-d);
+    font-size: 13px;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+  }
+  .video-cc {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.75);
+    color: white;
+    border-radius: var(--r-sm);
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: var(--font-b);
+    font-weight: 500;
+    z-index: 1;
+  }
+
+  .key-points {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .key-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--white);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .key-point .kp-icon { font-size: 24px; flex-shrink: 0; margin-top: 1px; }
+  .key-point .kp-text { font-size: 16px; font-weight: 600; color: var(--ink); line-height: 1.4; }
+
+  /* ── SCREEN 4: PRACTICE ── */
+  .practice-q {
+    background: var(--white);
+    border-radius: var(--r-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+  }
+  .practice-q .q-text {
+    font-family: var(--font-d);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+  .choice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .choice-card {
+    background: var(--cream);
+    border: 2.5px solid var(--cream-dark);
+    border-radius: var(--r-lg);
+    padding: 16px 12px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .choice-card:hover {
+    border-color: var(--forest);
+    background: var(--forest-pale);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .choice-card.selected {
+    border-color: var(--forest);
+    background: var(--forest-pale);
+    box-shadow: 0 0 0 2px var(--forest);
+  }
+  .choice-card.correct {
+    border-color: var(--mint);
+    background: var(--mint-pale);
+    box-shadow: 0 0 0 2px var(--mint);
+  }
+  .choice-card .c-icon { font-size: 36px; line-height: 1; }
+  .choice-card .c-label { font-family: var(--font-d); font-size: 15px; font-weight: 600; color: var(--ink); }
+
+  .hint-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--sky-pale);
+    border: 1.5px solid var(--sky);
+    border-radius: var(--r-full);
+    padding: 8px 16px;
+    font-family: var(--font-d);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--sky);
+    align-self: flex-start;
+  }
+
+  /* ── SCREEN 5: INDEPENDENT ── */
+  .feedback-correct {
+    background: var(--mint-pale);
+    border: 2px solid var(--mint);
+    border-radius: var(--r-lg);
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .feedback-icon { font-size: 32px; flex-shrink: 0; }
+  .feedback-text .fb-title {
+    font-family: var(--font-d);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--mint);
+    margin-bottom: 4px;
+  }
+  .feedback-text .fb-detail { font-size: 15px; color: var(--ink-soft); font-weight: 500; }
+
+  /* ── SCREEN 6: CHOICE ── */
+  .choice-title {
+    font-family: var(--font-d);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .choice-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .big-choice {
+    background: var(--white);
+    border: 3px solid var(--cream-dark);
+    border-radius: var(--r-xl);
+    padding: 20px 16px;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+  }
+  .big-choice:hover {
+    border-color: var(--amber);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(224,124,48,0.20);
+  }
+  .big-choice.picked {
+    border-color: var(--amber);
+    background: var(--amber-pale);
+    box-shadow: 0 0 0 2px var(--amber);
+  }
+  .big-choice .bc-icon { font-size: 48px; }
+  .big-choice .bc-label { font-family: var(--font-d); font-size: 16px; font-weight: 700; color: var(--ink); }
+  .big-choice .bc-desc { font-size: 13px; color: var(--ink-muted); font-weight: 500; line-height: 1.4; }
+
+  /* ── SCREEN 7: COMMIT ── */
+  .commit-card {
+    background: var(--white);
+    border-radius: var(--r-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid var(--forest);
+  }
+  .commit-formula {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .commit-after {
+    font-size: 14px;
+    color: var(--ink-muted);
+    font-weight: 600;
+    font-family: var(--font-d);
+    letter-spacing: 0.3px;
+  }
+  .commit-anchor {
+    font-family: var(--font-d);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    padding: 12px 16px;
+    background: var(--cream);
+    border-radius: var(--r-md);
+    margin: 4px 0 12px;
+  }
+  .commit-will {
+    font-size: 14px;
+    color: var(--ink-muted);
+    font-weight: 600;
+    font-family: var(--font-d);
+    letter-spacing: 0.3px;
+  }
+  .commit-action {
+    font-family: var(--font-d);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--forest);
+    padding: 12px 16px;
+    background: var(--forest-pale);
+    border-radius: var(--r-md);
+    margin-top: 4px;
+  }
+  .commit-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    padding: 16px 0 4px;
+    font-size: 32px;
+  }
+  .commit-arrow { color: var(--ink-faint); font-size: 20px; }
+
+  .remind-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--amber-pale);
+    border-radius: var(--r-lg);
+    padding: 14px 18px;
+    border: 1.5px solid var(--amber-light);
+  }
+  .remind-icon { font-size: 28px; flex-shrink: 0; }
+  .remind-text .rt-label { font-family: var(--font-d); font-size: 15px; font-weight: 700; color: var(--amber); }
+  .remind-text .rt-sub { font-size: 13px; color: var(--ink-soft); font-weight: 500; }
+
+  /* ── SCREEN 8: CELEBRATE ── */
+  .celebrate-bg {
+    position: relative;
+    background: linear-gradient(160deg, var(--forest) 0%, #1C4A2C 100%);
+    border-radius: var(--r-xl);
+    padding: 32px 24px;
+    text-align: center;
+    overflow: hidden;
+    color: var(--white);
+  }
+  .celebrate-bg .confetti {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px;
+    pointer-events: none;
+    opacity: 0.15;
+    font-size: 20px;
+  }
+  .celebrate-bg .big-emoji { font-size: 72px; position: relative; z-index: 1; }
+  .celebrate-bg h2 {
+    font-family: var(--font-d);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--white);
+    margin-top: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .celebrate-bg .sub {
+    color: rgba(255,255,255,0.75);
+    font-size: 16px;
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+    font-weight: 500;
+  }
+
+  .progress-bar-card {
+    background: var(--white);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .pb-label {
+    font-family: var(--font-d);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .pb-label span { color: var(--forest); font-size: 16px; }
+  .pb-track {
+    height: 16px;
+    background: var(--cream-dark);
+    border-radius: var(--r-full);
+    overflow: hidden;
+  }
+  .pb-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--forest-light), var(--forest));
+    border-radius: var(--r-full);
+    width: 65%;
+    transition: width 1s ease;
+    position: relative;
+  }
+  .pb-fill::after {
+    content: '🌿';
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+  }
+
+  .next-card {
+    background: var(--cream);
+    border-radius: var(--r-lg);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1.5px solid var(--cream-dark);
+  }
+  .next-card .nt-label { font-family: var(--font-d); font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-bottom: 3px; }
+  .next-card .nt-title { font-family: var(--font-d); font-size: 17px; font-weight: 700; color: var(--ink); }
+  .next-card .nt-arrow {
+    width: 40px; height: 40px;
+    background: var(--forest-pale);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: var(--forest);
+  }
+
+  /* ── NAV DOTS ── */
+  .nav-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 0 4px;
+  }
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-dot.active { background: var(--forest); width: 24px; border-radius: var(--r-full); }
+  .nav-dot.done { background: var(--forest-light); }
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span class="status-time">9:41</span>
+    <div class="status-icons">📶 🔋</div>
+  </div>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="top-bar-row">
+      <div class="coach-chip">
+        <div class="coach-avatar">🌱</div>
+        <span class="coach-name">Coach Maya</span>
+      </div>
+      <button class="audio-btn" id="audioBtn" title="Listen to this page">🔊</button>
+    </div>
+    <!-- Visual Schedule -->
+    <div class="visual-schedule" id="visualSchedule">
+      <div class="vs-step active" data-step="0">
+        <div class="vs-icon">👋</div>
+        <div class="vs-label">Hello</div>
+      </div>
+      <div class="vs-line"></div>
+      <div class="vs-step" data-step="1">
+        <div class="vs-icon">🎯</div>
+        <div class="vs-label">Your goal</div>
+      </div>
+      <div class="vs-line"></div>
+      <div class="vs-step" data-step="2">
+        <div class="vs-icon">▶️</div>
+        <div class="vs-label">Watch</div>
+      </div>
+      <div class="vs-line"></div>
+      <div class="vs-step" data-step="3">
+        <div class="vs-icon">🤝</div>
+        <div class="vs-label">Practice</div>
+      </div>
+      <div class="vs-line"></div>
+      <div class="vs-step" data-step="4">
+        <div class="vs-icon">⭐</div>
+        <div class="vs-label">Your turn</div>
+      </div>
+      <div class="vs-line"></div>
+      <div class="vs-step" data-step="5">
+        <div class="vs-icon">✋</div>
+        <div class="vs-label">Choose</div>
+      </div>
+      <div class="vs-line"></div>
+      <div class="vs-step" data-step="6">
+        <div class="vs-icon">📌</div>
+        <div class="vs-label">Promise</div>
+      </div>
+      <div class="vs-line"></div>
+      <div class="vs-step" data-step="7">
+        <div class="vs-icon">🎉</div>
+        <div class="vs-label">Done!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREENS -->
+  <div class="screens">
+
+    <!-- SCREEN 1: OPENER -->
+    <div class="screen active" id="screen-0">
+      <div class="greeting-card">
+        <div class="greeting-avatar">🌱</div>
+        <div class="greeting-text">
+          <div class="name">Hi, Jordan! 👋</div>
+          <div class="message">Ready for your lesson today?</div>
+        </div>
+      </div>
+
+      <div class="date-card">
+        <div>
+          <div class="date-label">Today</div>
+          <div class="date-val">Friday, June 6</div>
+        </div>
+        <div class="streak">
+          <div class="streak-num">12</div>
+          <div class="streak-label">times this month</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="mood-label">How are you feeling right now?</div>
+        <div class="mood-row">
+          <button class="mood-btn" onclick="selectMood(this)">😔</button>
+          <button class="mood-btn" onclick="selectMood(this)">😐</button>
+          <button class="mood-btn" onclick="selectMood(this)">🙂</button>
+          <button class="mood-btn" onclick="selectMood(this)">😄</button>
+          <button class="mood-btn" onclick="selectMood(this)">🤩</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: GOAL CONNECT -->
+    <div class="screen" id="screen-1">
+      <div class="step-label">🎯 Your goal</div>
+      <div class="goal-card">
+        <div class="label">YOUR GOAL</div>
+        <div class="goal-text">Feel stronger and keep up with my friends at the park</div>
+      </div>
+      <div class="goal-photo">💪</div>
+      <div class="connection-text">
+        <p>Today you'll learn about drinking enough water. <strong>Water gives your muscles energy</strong> — which means more fun at the park!</p>
+      </div>
+      <div class="body-text" style="padding:0 4px;">This is lesson 3 of your Hydration goal. You've done 2 already — amazing work!</div>
+    </div>
+
+    <!-- SCREEN 3: TEACH -->
+    <div class="screen" id="screen-2">
+      <div class="step-label">▶️ Watch and learn</div>
+      <h2>How much water do you need?</h2>
+      <div class="video-placeholder">
+        <div class="play-btn">▶</div>
+        <div class="video-caption">Coach Maya explains — 1:20</div>
+        <div class="video-cc">Coach Maya: "Think of your body like a plant — it needs water every day to stay strong."</div>
+      </div>
+      <div class="key-points">
+        <div class="key-point">
+          <div class="kp-icon">🥤</div>
+          <div class="kp-text">Drink <strong>8 glasses</strong> of water each day</div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon">⏰</div>
+          <div class="kp-text">Start with <strong>one glass in the morning</strong></div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon">💪</div>
+          <div class="kp-text">Water helps your <strong>muscles work better</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: GUIDED PRACTICE -->
+    <div class="screen" id="screen-3">
+      <div class="step-label">🤝 Let's do it together</div>
+      <div class="hint-chip">💡 Let's do this one together first</div>
+      <div class="practice-q">
+        <div class="q-text">Which one should you drink for healthy muscles?</div>
+        <div class="choice-grid">
+          <div class="choice-card" onclick="selectPractice(this, false)">
+            <div class="c-icon">🥤</div>
+            <div class="c-label">Water</div>
+          </div>
+          <div class="choice-card" onclick="selectPractice(this, false)">
+            <div class="c-icon">🍬</div>
+            <div class="c-label">Candy</div>
+          </div>
+          <div class="choice-card" onclick="selectPractice(this, false)">
+            <div class="c-icon">🧃</div>
+            <div class="c-label">Juice</div>
+          </div>
+          <div class="choice-card" onclick="selectPractice(this, false)">
+            <div class="c-icon">☕</div>
+            <div class="c-label">Coffee</div>
+          </div>
+        </div>
+      </div>
+      <div id="practiceHint" style="display:none;">
+        <div class="hint-chip">💡 Remember: water helps muscles work!</div>
+      </div>
+    </div>
+
+    <!-- SCREEN 5: INDEPENDENT -->
+    <div class="screen" id="screen-4">
+      <div class="step-label amber">⭐ Your turn</div>
+      <h2>Your turn now!</h2>
+      <div class="practice-q">
+        <div class="q-text">When is the best time to drink your first glass of water?</div>
+        <div class="choice-grid">
+          <div class="choice-card" onclick="selectIndependent(this, true)">
+            <div class="c-icon">🌅</div>
+            <div class="c-label">Morning</div>
+          </div>
+          <div class="choice-card" onclick="selectIndependent(this, false)">
+            <div class="c-icon">🌙</div>
+            <div class="c-label">Bedtime</div>
+          </div>
+          <div class="choice-card" onclick="selectIndependent(this, false)">
+            <div class="c-icon">🎬</div>
+            <div class="c-label">Movies</div>
+          </div>
+          <div class="choice-card" onclick="selectIndependent(this, false)">
+            <div class="c-icon">🤷</div>
+            <div class="c-label">Never</div>
+          </div>
+        </div>
+      </div>
+      <div id="indFeedback" style="display:none;" class="feedback-correct">
+        <div class="feedback-icon">✅</div>
+        <div class="feedback-text">
+          <div class="fb-title">You got it!</div>
+          <div class="fb-detail">Morning is perfect — your body needs water after sleeping all night.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 6: CHOICE POINT -->
+    <div class="screen" id="screen-5">
+      <div class="step-label">✋ Pick what works for you</div>
+      <div class="choice-title">How will you remember to drink water in the morning?</div>
+      <div class="body-text">All of these work great — just pick the one that fits <em>you</em>.</div>
+      <div class="choice-grid-2">
+        <div class="big-choice" onclick="pickChoice(this)">
+          <div class="bc-icon">🥤</div>
+          <div class="bc-label">Water bottle on my nightstand</div>
+          <div class="bc-desc">See it right when you wake up</div>
+        </div>
+        <div class="big-choice" onclick="pickChoice(this)">
+          <div class="bc-icon">⏰</div>
+          <div class="bc-label">Phone reminder at 7am</div>
+          <div class="bc-desc">Gets a notification</div>
+        </div>
+        <div class="big-choice" onclick="pickChoice(this)">
+          <div class="bc-icon">📝</div>
+          <div class="bc-label">Sticky note on mirror</div>
+          <div class="bc-desc">See it while getting ready</div>
+        </div>
+        <div class="big-choice" onclick="pickChoice(this)">
+          <div class="bc-icon">🍳</div>
+          <div class="bc-label">Drink while breakfast cooks</div>
+          <div class="bc-desc">Already part of your routine</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 7: COMMITMENT -->
+    <div class="screen" id="screen-6">
+      <div class="step-label">📌 Your promise</div>
+      <h2>Your tiny step</h2>
+      <div class="commit-card">
+        <div class="commit-formula">
+          <div class="commit-after">After I…</div>
+          <div class="commit-anchor">🍳 Make breakfast in the morning</div>
+          <div class="commit-will">I will…</div>
+          <div class="commit-action">🥤 Fill my water bottle and drink one glass</div>
+        </div>
+        <div class="commit-icons">
+          <span>🍳</span>
+          <span class="commit-arrow">→</span>
+          <span>🥤</span>
+          <span class="commit-arrow">→</span>
+          <span>✅</span>
+        </div>
+      </div>
+      <div class="remind-card">
+        <div class="remind-icon">🔔</div>
+        <div class="remind-text">
+          <div class="rt-label">Reminder set for 7:30 AM</div>
+          <div class="rt-sub">We'll check in tomorrow morning</div>
+        </div>
+      </div>
+      <div class="body-text" style="padding:0 4px;">Are you 100% sure you can do this small step?<br>Tap <strong>Yes, I'm sure!</strong> to lock it in.</div>
+    </div>
+
+    <!-- SCREEN 8: CELEBRATE -->
+    <div class="screen" id="screen-7">
+      <div class="celebrate-bg">
+        <div class="confetti">🌟✨🎉🌿💚⭐🎊🌱🏆💪🌟✨🎉🌿</div>
+        <div class="big-emoji">🎉</div>
+        <h2>You did it, Jordan!</h2>
+        <p class="sub">You finished "Drinking More Water" — Lesson 3</p>
+      </div>
+
+      <div class="progress-bar-card">
+        <div class="pb-label">Your Hydration Goal <span>65%</span></div>
+        <div class="pb-track">
+          <div class="pb-fill"></div>
+        </div>
+        <div style="margin-top:10px;font-size:14px;color:var(--ink-muted);font-weight:500;">3 of 5 lessons done. You're more than halfway!</div>
+      </div>
+
+      <div class="next-card">
+        <div>
+          <div class="nt-label">Coming up next</div>
+          <div class="nt-title">🥗 Smart snack choices</div>
+        </div>
+        <div class="nt-arrow">→</div>
+      </div>
+    </div>
+
+  </div><!-- /screens -->
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="nav-dots" id="navDots">
+      <div class="nav-dot active" onclick="goToScreen(0)"></div>
+      <div class="nav-dot" onclick="goToScreen(1)"></div>
+      <div class="nav-dot" onclick="goToScreen(2)"></div>
+      <div class="nav-dot" onclick="goToScreen(3)"></div>
+      <div class="nav-dot" onclick="goToScreen(4)"></div>
+      <div class="nav-dot" onclick="goToScreen(5)"></div>
+      <div class="nav-dot" onclick="goToScreen(6)"></div>
+      <div class="nav-dot" onclick="goToScreen(7)"></div>
+    </div>
+    <button class="btn-main" id="mainBtn" onclick="nextScreen()">Let's start! →</button>
+    <button class="btn-secondary" id="secBtn" onclick="prevScreen()">← Back</button>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+let currentScreen = 0;
+const totalScreens = 8;
+let moodSelected = false;
+let practiceAnswered = false;
+let independentAnswered = false;
+let choiceSelected = false;
+
+const screenTitles = [
+  "Let's start! →",
+  "This is my goal →",
+  "I watched it →",
+  "I understand →",
+  "That's my answer →",
+  "I choose this! →",
+  "Yes, I'm sure! 🤝",
+  "See you next time! 🌱"
+];
+
+function updateUI() {
+  // screens
+  document.querySelectorAll('.screen').forEach((s, i) => {
+    s.classList.toggle('active', i === currentScreen);
+  });
+
+  // visual schedule
+  document.querySelectorAll('.vs-step').forEach((s, i) => {
+    s.classList.remove('active', 'done');
+    if (i < currentScreen) s.classList.add('done');
+    if (i === currentScreen) s.classList.add('active');
+  });
+  document.querySelectorAll('.vs-line').forEach((l, i) => {
+    l.classList.toggle('done', i < currentScreen);
+  });
+
+  // nav dots
+  document.querySelectorAll('.nav-dot').forEach((d, i) => {
+    d.classList.remove('active', 'done');
+    if (i < currentScreen) d.classList.add('done');
+    if (i === currentScreen) d.classList.add('active');
+  });
+
+  // main button text
+  document.getElementById('mainBtn').textContent = screenTitles[currentScreen];
+
+  // last screen style
+  if (currentScreen === 7) {
+    document.getElementById('mainBtn').classList.add('amber');
+    document.getElementById('secBtn').style.display = 'none';
+  } else {
+    document.getElementById('mainBtn').classList.remove('amber');
+    document.getElementById('secBtn').style.display = '';
+  }
+
+  // back btn hide on first screen
+  document.getElementById('secBtn').style.visibility = currentScreen === 0 ? 'hidden' : 'visible';
+}
+
+function nextScreen() {
+  if (currentScreen < totalScreens - 1) {
+    currentScreen++;
+    updateUI();
+  }
+}
+
+function prevScreen() {
+  if (currentScreen > 0) {
+    currentScreen--;
+    updateUI();
+  }
+}
+
+function goToScreen(i) {
+  currentScreen = i;
+  updateUI();
+}
+
+function selectMood(btn) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  moodSelected = true;
+  setTimeout(() => nextScreen(), 600);
+}
+
+function selectPractice(card, isCorrect) {
+  document.querySelectorAll('#screen-3 .choice-card').forEach(c => c.classList.remove('selected', 'correct'));
+  if (card.querySelector('.c-label').textContent === 'Water') {
+    card.classList.add('correct');
+    setTimeout(() => nextScreen(), 900);
+  } else {
+    card.classList.add('selected');
+    document.getElementById('practiceHint').style.display = 'block';
+    setTimeout(() => {
+      document.querySelectorAll('#screen-3 .choice-card').forEach(c => {
+        if (c.querySelector('.c-label').textContent === 'Water') c.classList.add('correct');
+      });
+    }, 1200);
+  }
+}
+
+function selectIndependent(card, isCorrect) {
+  document.querySelectorAll('#screen-4 .choice-card').forEach(c => c.classList.remove('selected', 'correct'));
+  if (isCorrect) {
+    card.classList.add('correct');
+    document.getElementById('indFeedback').style.display = 'flex';
+    setTimeout(() => nextScreen(), 1400);
+  } else {
+    card.classList.add('selected');
+    setTimeout(() => {
+      document.querySelectorAll('#screen-4 .choice-card').forEach(c => {
+        if (c.querySelector('.c-label').textContent === 'Morning') c.classList.add('correct');
+      });
+      document.getElementById('indFeedback').style.display = 'flex';
+    }, 900);
+  }
+}
+
+function pickChoice(card) {
+  document.querySelectorAll('.big-choice').forEach(c => c.classList.remove('picked'));
+  card.classList.add('picked');
+  setTimeout(() => nextScreen(), 700);
+}
+
+// init
+updateUI();
+</script>
+</body>
+</html>

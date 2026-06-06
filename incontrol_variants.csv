@@ -1,0 +1,10 @@
+variant_id,label,variant_of,intensity_tier,position,balance_demand,lower_limb_demand,cognitive_demand,contraindications,note
+standing_squat,Standing Bodyweight Squat,squat,2,standing,1,1,standard,knee_pain:caution,The default version; needs some standing balance.
+supported_squat,Supported Squat (hold rail/counter),squat,1,standing,0,1,low,knee_pain:caution,Hold a stable surface — removes the balance demand.
+chair_sit_to_stand,Chair Sit-to-Stand,squat,1,seated,0,1,low,,Stand up from / sit down to a chair. Chair gives support; very low-cog.
+wall_sit_iso,Wall Sit (isometric hold),squat,3,standing,1,2,standard,knee_pain:avoid;cardiac:caution,Static hold — hardest. Isometric holds raise blood pressure.
+seated_leg_ext,Seated Leg Extension,squat,1,seated,0,0,low,,No standing or weight-bearing needed at all.
+standing_ff,Standing Forward Fold,forward_fold,2,standing,1,1,standard,dizziness:avoid;cardiac:caution;back_pain:caution,Head drops below heart — watch dizziness/BP.
+supported_hinge,Supported Hinge (hands on counter),forward_fold,1,standing,0,1,low,back_pain:caution,Hinge with support; head stays higher.
+seated_ff_chair,Seated Forward Fold (chair),forward_fold,1,seated,0,0,low,,Reach toward the floor from a chair.
+seated_ff_floor,Seated Forward Fold (floor),forward_fold,2,floor,0,0,standard,,Legs extended on the floor; requires getting down to the floor.

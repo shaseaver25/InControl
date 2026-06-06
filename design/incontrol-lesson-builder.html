@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InControl — Lesson Builder (Kelsey/Nick)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:        #F7F3EC;
+    --cream-dark:   #EDE8DF;
+    --white:        #FFFFFF;
+    --forest:       #2E6844;
+    --forest-light: #4A9265;
+    --forest-pale:  #D6EDE0;
+    --amber:        #E07C30;
+    --amber-light:  #F5A461;
+    --amber-pale:   #FDE8D4;
+    --mint:         #3DB89A;
+    --mint-pale:    #D4F0E8;
+    --sky:          #4A90C4;
+    --sky-pale:     #D4E8F5;
+    --purple:       #7C5CBF;
+    --purple-pale:  #EDE8F8;
+    --ink:          #1A1714;
+    --ink-soft:     #4A4540;
+    --ink-muted:    #8A857F;
+    --ink-faint:    #C4BFB8;
+    --sidebar-bg:   #1E2A22;
+    --sidebar-text: rgba(255,255,255,0.72);
+    --font-d: 'Fredoka', sans-serif;
+    --font-b: 'Nunito', sans-serif;
+    --r-sm: 6px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px; --r-full: 999px;
+    --shadow-sm:  0 1px 4px rgba(0,0,0,0.08);
+    --shadow-md:  0 4px 16px rgba(0,0,0,0.10);
+    --shadow-lg:  0 8px 32px rgba(0,0,0,0.14);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-b);
+    background: var(--cream);
+    color: var(--ink);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOP NAV ── */
+  .topnav {
+    height: 52px;
+    background: var(--sidebar-bg);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 16px;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .topnav-logo {
+    font-family: var(--font-d);
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .topnav-logo .logo-leaf { font-size: 22px; }
+  .topnav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.12); }
+  .topnav-context {
+    font-family: var(--font-b);
+    font-size: 13px;
+    color: var(--sidebar-text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .topnav-context .slash { opacity: 0.35; }
+  .topnav-context .active { color: #fff; font-weight: 600; }
+  .topnav-spacer { flex: 1; }
+  .topnav-actions { display: flex; gap: 8px; align-items: center; }
+  .nav-btn {
+    font-family: var(--font-d);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: var(--r-full);
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .nav-btn.ghost {
+    background: rgba(255,255,255,0.08);
+    color: var(--sidebar-text);
+  }
+  .nav-btn.ghost:hover { background: rgba(255,255,255,0.14); color: #fff; }
+  .nav-btn.primary {
+    background: var(--forest);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(46,104,68,0.35);
+  }
+  .nav-btn.primary:hover { background: var(--forest-light); }
+  .nav-btn.amber-btn {
+    background: var(--amber);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(224,124,48,0.30);
+  }
+
+  .status-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.08);
+    padding: 5px 12px;
+    border-radius: var(--r-full);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-d);
+    color: var(--amber-light);
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--amber-light);
+    box-shadow: 0 0 6px var(--amber);
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 240px 1fr 320px;
+    overflow: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--sidebar-bg);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.1) transparent;
+    padding: 16px 0;
+  }
+  .sidebar-section-label {
+    font-family: var(--font-d);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.28);
+    padding: 0 16px;
+    margin-bottom: 6px;
+  }
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 0;
+    position: relative;
+  }
+  .sidebar-item:hover { background: rgba(255,255,255,0.05); }
+  .sidebar-item.active {
+    background: rgba(255,255,255,0.08);
+  }
+  .sidebar-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--amber);
+    border-radius: 0 3px 3px 0;
+  }
+  .step-number {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-d);
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.45);
+    flex-shrink: 0;
+  }
+  .sidebar-item.done .step-number {
+    background: var(--forest-pale);
+    color: var(--forest);
+  }
+  .sidebar-item.done .step-number::after { content: '✓'; }
+  .sidebar-item.active .step-number {
+    background: var(--amber);
+    color: #fff;
+  }
+  .step-info {}
+  .step-name {
+    font-family: var(--font-d);
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.2;
+  }
+  .sidebar-item.active .step-name { color: #fff; }
+  .sidebar-item.done .step-name { color: rgba(255,255,255,0.70); }
+  .step-status {
+    font-size: 11px;
+    color: rgba(255,255,255,0.28);
+    margin-top: 1px;
+  }
+  .sidebar-item.done .step-status { color: var(--mint); }
+  .sidebar-item.active .step-status { color: var(--amber-light); }
+
+  .sidebar-div { height: 1px; background: rgba(255,255,255,0.06); margin: 12px 16px; }
+
+  /* ── MAIN EDITOR ── */
+  .editor {
+    overflow-y: auto;
+    padding: 28px 32px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--cream-dark) transparent;
+  }
+
+  .editor-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+  }
+  .editor-step-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--amber-pale);
+    color: var(--amber);
+    padding: 5px 14px;
+    border-radius: var(--r-full);
+    font-family: var(--font-d);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    border: 1px solid rgba(224,124,48,0.2);
+  }
+  .editor-header h1 {
+    font-family: var(--font-d);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .editor-header .desc {
+    font-size: 14px;
+    color: var(--ink-muted);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* AI Generate Banner */
+  .ai-banner {
+    background: linear-gradient(135deg, var(--forest) 0%, #1C4A2C 100%);
+    border-radius: var(--r-lg);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: var(--shadow-md);
+  }
+  .ai-banner:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .ai-icon {
+    width: 44px; height: 44px;
+    border-radius: var(--r-md);
+    background: rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .ai-text .ai-title { font-family: var(--font-d); font-size: 17px; font-weight: 700; color: #fff; }
+  .ai-text .ai-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 2px; font-weight: 500; }
+  .ai-arrow { margin-left: auto; font-size: 20px; color: rgba(255,255,255,0.5); }
+
+  /* Field group */
+  .field-group {
+    background: var(--white);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--cream-dark);
+  }
+  .field-label {
+    font-family: var(--font-d);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .field-required { color: var(--amber); font-size: 10px; }
+  .field-note { font-size: 12px; color: var(--ink-muted); font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: auto; }
+  input[type="text"], textarea, select {
+    width: 100%;
+    font-family: var(--font-b);
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--cream);
+    border: 1.5px solid var(--cream-dark);
+    border-radius: var(--r-md);
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    resize: vertical;
+  }
+  input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px var(--forest-pale);
+    background: var(--white);
+  }
+  textarea { min-height: 80px; line-height: 1.6; }
+  .char-count { font-size: 11px; color: var(--ink-faint); text-align: right; margin-top: 4px; }
+
+  /* Choice builder */
+  .choices-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .choice-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--cream);
+    border-radius: var(--r-md);
+    padding: 10px 14px;
+    border: 1.5px solid var(--cream-dark);
+    transition: border-color 0.15s;
+  }
+  .choice-row:focus-within { border-color: var(--forest); }
+  .choice-emoji-pick {
+    width: 44px; height: 44px;
+    background: var(--white);
+    border-radius: var(--r-sm);
+    border: 1.5px solid var(--cream-dark);
+    font-size: 24px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .choice-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .choice-row input:focus { box-shadow: none; background: transparent; }
+  .choice-drag { color: var(--ink-faint); cursor: grab; font-size: 18px; }
+  .add-choice-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--forest);
+    font-family: var(--font-d);
+    font-size: 14px;
+    font-weight: 600;
+    background: none;
+    border: 1.5px dashed var(--forest-pale);
+    border-radius: var(--r-md);
+    padding: 10px 14px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s;
+  }
+  .add-choice-btn:hover { background: var(--forest-pale); }
+
+  /* Constraint chip */
+  .constraint-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .constraint-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--sky-pale);
+    color: var(--sky);
+    border-radius: var(--r-full);
+    padding: 4px 12px;
+    font-family: var(--font-d);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* Tabs */
+  .tab-row { display: flex; gap: 4px; margin-bottom: 20px; }
+  .tab {
+    font-family: var(--font-d);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: var(--r-full);
+    border: none;
+    background: var(--cream-dark);
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab.active { background: var(--forest); color: #fff; }
+  .tab:hover:not(.active) { background: var(--cream); }
+
+  /* ── PREVIEW PANEL ── */
+  .preview-panel {
+    background: var(--cream-dark);
+    border-left: 1px solid #D8D3CA;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .preview-header {
+    background: var(--white);
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--cream-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .preview-title {
+    font-family: var(--font-d);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .preview-toggle {
+    display: flex;
+    gap: 4px;
+    background: var(--cream);
+    border-radius: var(--r-full);
+    padding: 3px;
+  }
+  .ptoggle-btn {
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: var(--r-full);
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-d);
+    font-weight: 600;
+    color: var(--ink-muted);
+    transition: all 0.15s;
+  }
+  .ptoggle-btn.active { background: var(--forest); color: #fff; }
+
+  .preview-scroll {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 16px;
+    scrollbar-width: thin;
+  }
+
+  /* mini phone for preview */
+  .mini-phone {
+    width: 260px;
+    border-radius: 32px;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.18), 0 0 0 8px #1A1714, 0 0 0 10px #333;
+    background: var(--cream);
+    font-size: 0.82em;
+  }
+  .mini-status {
+    height: 28px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    font-family: var(--font-d);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .mini-top {
+    background: var(--white);
+    padding: 10px 14px 12px;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .mini-coach {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--forest-pale);
+    border-radius: var(--r-full);
+    padding: 4px 10px 4px 4px;
+    margin-bottom: 10px;
+    display: inline-flex;
+  }
+  .mini-avatar {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--forest);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+  .mini-coach-name { font-family: var(--font-d); font-size: 11px; font-weight: 600; color: var(--forest); }
+  /* mini schedule */
+  .mini-sched {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow: hidden;
+  }
+  .mini-s-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 28px;
+    opacity: 0.4;
+  }
+  .mini-s-step.active { opacity: 1; }
+  .mini-s-step.done { opacity: 0.7; }
+  .mini-s-icon {
+    width: 22px; height: 22px;
+    border-radius: 5px;
+    background: var(--cream-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+  .mini-s-step.active .mini-s-icon { background: var(--amber); }
+  .mini-s-step.done .mini-s-icon { background: var(--forest-pale); }
+  .mini-s-label { font-size: 7px; font-family: var(--font-d); font-weight: 600; color: var(--ink-muted); text-align: center; line-height: 1; }
+  .mini-s-line { width: 4px; height: 1px; background: var(--cream-dark); margin-bottom: 12px; }
+
+  .mini-content {
+    padding: 16px 14px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .mini-step-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--amber-pale);
+    color: var(--amber);
+    padding: 3px 10px;
+    border-radius: var(--r-full);
+    font-family: var(--font-d);
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .mini-h { font-family: var(--font-d); font-size: 16px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+  .mini-body { font-size: 12px; color: var(--ink-soft); font-weight: 500; line-height: 1.5; }
+  .mini-choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+  .mini-choice {
+    background: var(--white);
+    border: 2px solid var(--cream-dark);
+    border-radius: 10px;
+    padding: 10px 6px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+  .mini-choice .mc-icon { font-size: 22px; }
+  .mini-choice .mc-label { font-family: var(--font-d); font-size: 10px; font-weight: 600; }
+  .mini-bottom {
+    background: var(--white);
+    padding: 10px 14px 16px;
+    border-top: 1px solid var(--cream-dark);
+  }
+  .mini-btn {
+    width: 100%;
+    padding: 11px;
+    background: var(--forest);
+    color: #fff;
+    border: none;
+    border-radius: var(--r-full);
+    font-family: var(--font-d);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  /* ── VALIDATION PANEL ── */
+  .validation-section {
+    background: var(--white);
+    border-top: 1px solid var(--cream-dark);
+    padding: 14px 18px;
+    flex-shrink: 0;
+  }
+  .val-title {
+    font-family: var(--font-d);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  .val-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--cream);
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .val-item:last-child { border-bottom: none; }
+  .val-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+
+  /* Progress top bar */
+  .lesson-progress {
+    background: var(--white);
+    padding: 8px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--cream-dark);
+    flex-shrink: 0;
+  }
+  .lp-label { font-family: var(--font-d); font-size: 12px; font-weight: 600; color: var(--ink-muted); }
+  .lp-track { flex: 1; height: 6px; background: var(--cream-dark); border-radius: var(--r-full); overflow: hidden; }
+  .lp-fill { height: 100%; background: linear-gradient(90deg, var(--forest-light), var(--forest)); border-radius: var(--r-full); width: 37.5%; transition: width 0.4s ease; }
+  .lp-count { font-family: var(--font-d); font-size: 12px; font-weight: 700; color: var(--forest); }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="topnav">
+  <div class="topnav-logo">
+    <span class="logo-leaf">🌱</span>
+    InControl
+  </div>
+  <div class="topnav-sep"></div>
+  <div class="topnav-context">
+    <span>Lessons</span>
+    <span class="slash">/</span>
+    <span>Hydration Series</span>
+    <span class="slash">/</span>
+    <span class="active">Lesson 3 — Water & Muscles</span>
+  </div>
+  <div class="topnav-spacer"></div>
+  <div class="topnav-actions">
+    <div class="status-chip"><div class="status-dot"></div> Draft</div>
+    <button class="nav-btn ghost">Preview full lesson</button>
+    <button class="nav-btn primary">Save draft</button>
+    <button class="nav-btn amber-btn">Submit for review →</button>
+  </div>
+</div>
+
+<!-- LESSON PROGRESS -->
+<div class="lesson-progress">
+  <span class="lp-label">Lesson completion</span>
+  <div class="lp-track"><div class="lp-fill" id="lpFill"></div></div>
+  <span class="lp-count" id="lpCount">3 / 8 steps filled</span>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section-label">Lesson Steps</div>
+
+    <div class="sidebar-item done" onclick="activateStep(0, this)">
+      <div class="step-number"></div>
+      <div class="step-info">
+        <div class="step-name">1. Opener</div>
+        <div class="step-status">✓ Complete</div>
+      </div>
+    </div>
+    <div class="sidebar-item done" onclick="activateStep(1, this)">
+      <div class="step-number"></div>
+      <div class="step-info">
+        <div class="step-name">2. Goal connect</div>
+        <div class="step-status">✓ Complete</div>
+      </div>
+    </div>
+    <div class="sidebar-item done" onclick="activateStep(2, this)">
+      <div class="step-number"></div>
+      <div class="step-info">
+        <div class="step-name">3. Teach</div>
+        <div class="step-status">✓ Complete</div>
+      </div>
+    </div>
+    <div class="sidebar-item active" onclick="activateStep(3, this)">
+      <div class="step-number">4</div>
+      <div class="step-info">
+        <div class="step-name">4. Guided practice</div>
+        <div class="step-status">In progress</div>
+      </div>
+    </div>
+    <div class="sidebar-item" onclick="activateStep(4, this)">
+      <div class="step-number">5</div>
+      <div class="step-info">
+        <div class="step-name">5. Independent</div>
+        <div class="step-status">Not started</div>
+      </div>
+    </div>
+    <div class="sidebar-item" onclick="activateStep(5, this)">
+      <div class="step-number">6</div>
+      <div class="step-info">
+        <div class="step-name">6. Choice point</div>
+        <div class="step-status">Not started</div>
+      </div>
+    </div>
+    <div class="sidebar-item" onclick="activateStep(6, this)">
+      <div class="step-number">7</div>
+      <div class="step-info">
+        <div class="step-name">7. Tiny commitment</div>
+        <div class="step-status">Not started</div>
+      </div>
+    </div>
+    <div class="sidebar-item" onclick="activateStep(7, this)">
+      <div class="step-number">8</div>
+      <div class="step-info">
+        <div class="step-name">8. Celebration</div>
+        <div class="step-status">Not started</div>
+      </div>
+    </div>
+
+    <div class="sidebar-div"></div>
+    <div class="sidebar-section-label">Lesson settings</div>
+    <div class="sidebar-item" onclick="activateStep(8, this)">
+      <div class="step-number" style="font-size:16px;background:transparent;">⚙</div>
+      <div class="step-info">
+        <div class="step-name">Skill & domain</div>
+        <div class="step-status">Hydration · M1</div>
+      </div>
+    </div>
+    <div class="sidebar-item" onclick="activateStep(9, this)">
+      <div class="step-number" style="font-size:16px;background:transparent;">👥</div>
+      <div class="step-info">
+        <div class="step-name">Learner profile</div>
+        <div class="step-status">All profiles</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITOR -->
+  <div class="editor">
+    <div class="editor-header">
+      <div>
+        <div class="editor-step-badge">🤝 Step 4 of 8 — Guided Practice</div>
+        <h1>Guided Practice</h1>
+        <div class="desc">The learner answers with the app prompting alongside. All options are real choices. Hints appear before they can fail.</div>
+      </div>
+    </div>
+
+    <!-- AI Banner -->
+    <div class="ai-banner" onclick="aiGenerate()">
+      <div class="ai-icon">✨</div>
+      <div class="ai-text">
+        <div class="ai-title">Generate with AI</div>
+        <div class="ai-sub">AI writes the question and 4 choices based on Step 3 content — you edit and approve</div>
+      </div>
+      <div class="ai-arrow">→</div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-row">
+      <button class="tab active">Content</button>
+      <button class="tab">Accessibility</button>
+      <button class="tab">Variants</button>
+    </div>
+
+    <!-- Question -->
+    <div class="field-group">
+      <div class="field-label">
+        Question text <span class="field-required">required</span>
+        <span class="field-note">One concept only · Keep it simple</span>
+      </div>
+      <input type="text" id="qText" value="Which one should you drink to help your muscles?" oninput="updatePreview()" />
+      <div class="char-count" id="qCount">50 chars</div>
+      <div class="constraint-chips" style="margin-top:10px;">
+        <div class="constraint-chip">📖 Reading level: Grade 3</div>
+        <div class="constraint-chip">🎵 Audio auto-generated</div>
+      </div>
+    </div>
+
+    <!-- Answer choices -->
+    <div class="field-group">
+      <div class="field-label">
+        Answer choices
+        <span class="field-required">required</span>
+        <span class="field-note">2–4 options · All must be valid choices · No trick answers</span>
+      </div>
+      <div class="choices-builder" id="choicesBuilder">
+        <div class="choice-row">
+          <div class="choice-emoji-pick" title="Pick emoji">🥤</div>
+          <input type="text" value="Water" oninput="updatePreview()" placeholder="Label (short)" />
+          <span title="Drag to reorder" class="choice-drag">⠿</span>
+        </div>
+        <div class="choice-row">
+          <div class="choice-emoji-pick">🍬</div>
+          <input type="text" value="Candy" oninput="updatePreview()" placeholder="Label (short)" />
+          <span class="choice-drag">⠿</span>
+        </div>
+        <div class="choice-row">
+          <div class="choice-emoji-pick">🧃</div>
+          <input type="text" value="Juice" oninput="updatePreview()" placeholder="Label (short)" />
+          <span class="choice-drag">⠿</span>
+        </div>
+        <div class="choice-row">
+          <div class="choice-emoji-pick">☕</div>
+          <input type="text" value="Coffee" oninput="updatePreview()" placeholder="Label (short)" />
+          <span class="choice-drag">⠿</span>
+        </div>
+      </div>
+      <button class="add-choice-btn" style="margin-top:10px;" onclick="alert('Add choice — max 4')">+ Add option</button>
+    </div>
+
+    <!-- Hint -->
+    <div class="field-group">
+      <div class="field-label">Hint text <span class="field-note">Shown before learner can fail — never after</span></div>
+      <input type="text" value="Think about what we just watched — what does Coach Maya drink?" oninput="updatePreview()" />
+      <div style="margin-top:10px;display:flex;align-items:center;gap:10px;">
+        <label style="font-family:var(--font-d);font-size:13px;font-weight:600;color:var(--ink-soft);display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" checked style="width:16px;height:16px;accent-color:var(--forest);" />
+          Show hint before any tap (errorless mode)
+        </label>
+      </div>
+    </div>
+
+    <!-- Feedback -->
+    <div class="field-group">
+      <div class="field-label">Success feedback <span class="field-required">required</span></div>
+      <input type="text" value="Yes! Water is the best choice for your muscles." />
+      <div style="margin-top:10px;">
+        <div class="field-label" style="margin-bottom:6px;">Guidance feedback <span class="field-note">When they need the hint — never say "wrong"</span></div>
+        <input type="text" value="Water is the one that helps the most — tap the water glass!" />
+      </div>
+    </div>
+
+  </div><!-- /editor -->
+
+  <!-- PREVIEW PANEL -->
+  <div class="preview-panel">
+    <div class="preview-header">
+      <span class="preview-title">Live Preview</span>
+      <div class="preview-toggle">
+        <button class="ptoggle-btn active">📱 Phone</button>
+        <button class="ptoggle-btn">📋 Content</button>
+      </div>
+    </div>
+
+    <div class="preview-scroll">
+      <div class="mini-phone">
+        <!-- mini status -->
+        <div class="mini-status"><span>9:41</span><span>📶🔋</span></div>
+        <!-- mini top bar -->
+        <div class="mini-top">
+          <div class="mini-coach">
+            <div class="mini-avatar">🌱</div>
+            <span class="mini-coach-name">Coach Maya</span>
+          </div>
+          <div class="mini-sched">
+            <div class="mini-s-step done"><div class="mini-s-icon">👋</div><div class="mini-s-label">Hello</div></div>
+            <div class="mini-s-line"></div>
+            <div class="mini-s-step done"><div class="mini-s-icon">🎯</div><div class="mini-s-label">Goal</div></div>
+            <div class="mini-s-line"></div>
+            <div class="mini-s-step done"><div class="mini-s-icon">▶️</div><div class="mini-s-label">Watch</div></div>
+            <div class="mini-s-line"></div>
+            <div class="mini-s-step active"><div class="mini-s-icon">🤝</div><div class="mini-s-label">Practice</div></div>
+            <div class="mini-s-line"></div>
+            <div class="mini-s-step"><div class="mini-s-icon">⭐</div><div class="mini-s-label">Turn</div></div>
+            <div class="mini-s-line"></div>
+            <div class="mini-s-step"><div class="mini-s-icon">✋</div><div class="mini-s-label">Choose</div></div>
+            <div class="mini-s-line"></div>
+            <div class="mini-s-step"><div class="mini-s-icon">📌</div><div class="mini-s-label">Promise</div></div>
+            <div class="mini-s-line"></div>
+            <div class="mini-s-step"><div class="mini-s-icon">🎉</div><div class="mini-s-label">Done</div></div>
+          </div>
+        </div>
+        <!-- mini content -->
+        <div class="mini-content">
+          <div class="mini-step-label">🤝 Let's do it together</div>
+          <div class="mini-h" id="prevQ">Which one should you drink to help your muscles?</div>
+          <div class="mini-choices" id="prevChoices">
+            <div class="mini-choice"><div class="mc-icon">🥤</div><div class="mc-label">Water</div></div>
+            <div class="mini-choice"><div class="mc-icon">🍬</div><div class="mc-label">Candy</div></div>
+            <div class="mini-choice"><div class="mc-icon">🧃</div><div class="mc-label">Juice</div></div>
+            <div class="mini-choice"><div class="mc-icon">☕</div><div class="mc-label">Coffee</div></div>
+          </div>
+        </div>
+        <div class="mini-bottom">
+          <div class="mini-btn">I understand →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALIDATION -->
+    <div class="validation-section">
+      <div class="val-title">Accessibility check</div>
+      <div class="val-item">
+        <span class="val-icon">✅</span>
+        <span>2–4 choices (you have 4)</span>
+      </div>
+      <div class="val-item">
+        <span class="val-icon">✅</span>
+        <span>All options are valid — no trick answers</span>
+      </div>
+      <div class="val-item">
+        <span class="val-icon">✅</span>
+        <span>Hint available before failure</span>
+      </div>
+      <div class="val-item">
+        <span class="val-icon">⚠️</span>
+        <span>Each choice needs an emoji icon — 4 of 4 set</span>
+      </div>
+      <div class="val-item">
+        <span class="val-icon">✅</span>
+        <span>Audio narration will auto-generate from text</span>
+      </div>
+    </div>
+  </div><!-- /preview-panel -->
+
+</div><!-- /layout -->
+
+<script>
+function activateStep(index, el) {
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function updatePreview() {
+  const q = document.getElementById('qText').value;
+  const qCount = document.getElementById('qCount');
+  if (qCount) qCount.textContent = q.length + ' chars';
+  const prevQ = document.getElementById('prevQ');
+  if (prevQ) prevQ.textContent = q;
+
+  // choices
+  const inputs = document.querySelectorAll('.choice-row input');
+  const emojis = document.querySelectorAll('.choice-emoji-pick');
+  const prevChoices = document.getElementById('prevChoices');
+  if (prevChoices && inputs.length) {
+    prevChoices.innerHTML = '';
+    inputs.forEach((inp, i) => {
+      const emoji = emojis[i] ? emojis[i].textContent : '❓';
+      const div = document.createElement('div');
+      div.className = 'mini-choice';
+      div.innerHTML = `<div class="mc-icon">${emoji}</div><div class="mc-label">${inp.value || '...'}</div>`;
+      prevChoices.appendChild(div);
+    });
+  }
+}
+
+function aiGenerate() {
+  const btn = event.currentTarget;
+  btn.style.opacity = '0.6';
+  const oldText = btn.querySelector('.ai-title').textContent;
+  btn.querySelector('.ai-title').textContent = '✨ Generating…';
+  setTimeout(() => {
+    btn.style.opacity = '1';
+    btn.querySelector('.ai-title').textContent = '✨ Generated! Review and edit below';
+    btn.querySelector('.ai-sub').textContent = 'AI filled the question and choices — change anything you want';
+  }, 1600);
+}
+
+// init char count
+const q = document.getElementById('qText');
+if (q) document.getElementById('qCount').textContent = q.value.length + ' chars';
+</script>
+</body>
+</html>
