@@ -4,6 +4,23 @@ What this skill needs to run, depending on who's using it and where.
 
 ---
 
+## Required input: the course description
+
+Before generating any lesson, Claude needs to understand what InControl teaches — its domains, goals, and population. This context lives in one file:
+
+**`COURSE_DESCRIPTION.md`** (repo root)
+
+This file describes all 9 domains, 8 learning goals, 133 concepts, the adaptive design model, and what the curriculum is and isn't. It is the ground truth that keeps generated lessons accurate and in-scope.
+
+**How to use it:**
+
+- **In Claude Code:** Open the repo in your project. Claude picks up `COURSE_DESCRIPTION.md` automatically as project context. No extra step needed.
+- **In the Lovable app:** Paste a condensed version (the 9-domain table + 8 goals) into the system prompt alongside the lesson brief. The full `references/system-prompt.md` already includes a slot for this. Without it, Claude may generate lessons that reference concepts outside the curriculum or use domain language inconsistently.
+
+If you add a new content area (Month 4, nutrition, cooking), update `COURSE_DESCRIPTION.md` first — then generate lessons from it.
+
+---
+
 ## Two ways to use this skill
 
 ### 1. In Claude Code (Shannon or Nick generating lessons manually)
@@ -119,3 +136,12 @@ Use Haiku by default. Only escalate to Sonnet if Haiku output on a specific step
 | `SKILL.md` | The skill itself — Claude Code reads this when you ask it to generate a lesson |
 | `ABOUT.md` | This file — setup and dependencies |
 | `references/system-prompt.md` | The system prompt to paste into your Lovable app's Anthropic SDK call, with TypeScript examples |
+
+## Related files (repo root)
+
+| File | Purpose |
+|---|---|
+| `COURSE_DESCRIPTION.md` | **Required context for generation** — all 9 domains, 8 goals, 133 concepts, adaptive design model |
+| `incontrol_learning_graph_nodes.csv` | The 133 concept nodes — use to populate the concept picker in the brief form |
+| `incontrol_learning_graph_edges.csv` | The 177 prerequisite links — use to auto-populate prerequisites in the brief form |
+| `incontrol_variants.csv` | Variant data for exercises — referenced when generating step 4/5 choices for physical skills |
