@@ -49,8 +49,8 @@ Same for edges (needed for prerequisite auto-population later).
 Nick does not need his own Supabase account. He needs a user account *in your app*, which lives in Supabase Auth — your project, not his.
 
 Two ways to create it:
-- **Dashboard:** Supabase → Authentication → Users → Invite user → enter Nick's email. He gets an email, sets a password, done.
-- **In code:** `supabase.auth.admin.inviteUserByEmail('nick@...')` — call this from a one-time admin script or a simple invite page you build later.
+- **Dashboard:** Supabase → Authentication → Users → Invite user → `nick.ziebell@incontrolmn.com` → Send invite. He gets an email, sets a password, done.
+- **In code:** `supabase.auth.admin.inviteUserByEmail('nick.ziebell@incontrolmn.com')` — call this from a one-time admin script or a simple invite page you build later.
 
 His account is just a row in `auth.users`. That row ID is what populates `authored_by` on every lesson he generates. He never touches the Supabase dashboard.
 
