@@ -12,7 +12,7 @@ These will stall you if left open. Answer them before writing any code.
 
 | Decision | Options | Recommendation |
 |---|---|---|
-| **Auth in the generator app** | No auth (URL-protected internal tool) vs. Supabase auth (Shannon + Nick have accounts) | Supabase auth — Nick needs his own account to track authorship |
+| **Auth in the generator app** | No auth (URL-protected internal tool) vs. Supabase auth | Supabase auth — but Nick does NOT need his own Supabase account (see below) |
 | **Streaming vs. batch generation** | Stream each step as it arrives vs. wait for all 8 then display | Streaming — the reveal is the hero moment; Lovable supports it via fetch + ReadableStream |
 | **Concept picker data source** | Load nodes CSV into Supabase table vs. hardcode domains/months only | Seed into Supabase — unlocks prerequisite auto-population and future graph features |
 | **Handoff timing with other engineer** | Share JSON schema now vs. wait until first lesson is published | Share now — they can build render components in parallel while you build the generator |
@@ -44,12 +44,22 @@ create table concepts (
 Import `incontrol_learning_graph_nodes.csv` → Supabase Table Editor → Import CSV.  
 Same for edges (needed for prerequisite auto-population later).
 
-### 1b. Lovable project
+### 1b. Add Nick as a user (not a Supabase account)
+
+Nick does not need his own Supabase account. He needs a user account *in your app*, which lives in Supabase Auth — your project, not his.
+
+Two ways to create it:
+- **Dashboard:** Supabase → Authentication → Users → Invite user → enter Nick's email. He gets an email, sets a password, done.
+- **In code:** `supabase.auth.admin.inviteUserByEmail('nick@...')` — call this from a one-time admin script or a simple invite page you build later.
+
+His account is just a row in `auth.users`. That row ID is what populates `authored_by` on every lesson he generates. He never touches the Supabase dashboard.
+
+### 1c. Lovable project
 - Create new Lovable project, connect to your Supabase project
 - Add environment variable: `ANTHROPIC_API_KEY`
 - Confirm Supabase client is wired (it comes default in Lovable)
 
-### 1c. Smoke test the API call
+### 1d. Smoke test the API call
 Before building any UI, paste the system prompt from `references/system-prompt.md` into a simple test function and call it with a hardcoded brief. Confirm you get valid JSON back. This is the riskiest integration — test it first.
 
 **Done when:** You can call Claude API from Lovable, get 8-step JSON, and upsert it to `lesson_steps`.
