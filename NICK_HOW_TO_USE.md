@@ -150,4 +150,4 @@ Let Shannon know — changes to published lessons need to go through the tool an
 
 ## Questions?
 
-Shannon Seaver — `s.e.seaver@gmail.com`
+Shannon Seaver — `shannon@tailoredu.ai`
